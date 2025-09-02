@@ -1,6 +1,0 @@
-﻿Proceed with the deployment as correct DB version is being used...
-<<< CREATED FUNCTION dbo.f_get_lotto535_in_proc_panel_data >>>
-<<< CREATED FUNCTION dbo.f_get_lotto535_panel_data >>>
-<<< DROPPED FUNCTION dbo.f_oss_confirmed_tickets >>>
-<<< CREATED FUNCTION dbo.f_oss_confirmed_tickets >>>
-<<< CREATED FUNCTION dbo.f_get_pending_trans_activities >>>

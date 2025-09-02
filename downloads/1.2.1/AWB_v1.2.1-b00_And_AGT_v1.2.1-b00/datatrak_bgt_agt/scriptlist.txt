@@ -1,9 +1,0 @@
-1_datatrak_create_new_table_scripts.sql
-2_datatrak_alter_table_scripts.sql
-3_datatrak_functions_scripts.sql
-4_datatrak_triggers_scripts.sql
-5_datatrak_views_scripts.sql
-6_datatrak_sp_scripts.sql
-7_new_datatrak_data_insertion_scripts.sql
-8_permission_datatrak_scripts.sql
-9_new_datatrak_mis_version_update_scripts.sql

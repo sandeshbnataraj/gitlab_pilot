@@ -1,5 +1,0 @@
-﻿Proceed with the deployment as correct MIS version is being used...
-<<< DROPPED PROCEDURE dbo.p_upload_image >>>
-<<< CREATED PROCEDURE dbo.p_upload_image >>>
-<<< DROPPED PROCEDURE dbo.p_get_customer_details >>>
-<<< CREATED PROCEDURE dbo.p_get_customer_details >>>

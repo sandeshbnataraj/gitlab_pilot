@@ -14,7 +14,7 @@ build image:
         CONTAINER_REG: "docker.io/sandeshbn/gitlab_pilot"
     script:
         # Login to Docker Hub using your Docker Hub username and personal access token (PAT)
-        - docker login -u "sandeshbn" -p "dckr_pat_JVa9_frIMxTP97VZa8dZZVEzSTM"
+        - docker login -u "sandeshbn" -p "<token>"
         # Build the Docker image
         - docker build -t "$CONTAINER_REG:1.0.0" .
         # Push the Docker image to Docker Hub
