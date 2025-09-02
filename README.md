@@ -1,131 +1,127 @@
-# **GitLab Pilot 🚀**  
-*A streamlined tool to automate GitLab CI/CD pipeline management*  
-
-## **Overview**  
-**GitLab Pilot** is a Python-based application designed to **simplify CI/CD pipeline management** in GitLab. It provides an intuitive way to **trigger, monitor, and manage pipelines** without manually navigating the GitLab UI. This tool helps teams streamline their workflow by centralizing pipeline execution, artifact handling, and variable management.  
-
-## **Features**  
-✅ **Trigger GitLab pipelines** without logging into GitLab.  
-✅ **Manage CI/CD pipeline variables** dynamically.  
-✅ **Download artifacts** directly from completed pipelines.  
-✅ **Automate versioning and tagging** for structured releases.  
-✅ **Enhance pipeline execution across multiple projects.**  
-
-## **Project Repository**  
-🔗 **GitLab Repository:** [GitLab Pilot - Develop](https://gitlab.ilts.com/snataraj/gitlab_pilot/-/tree/develop?ref_type=heads)  
+Perfect 👍 — here’s your polished README with **screenshot/GIF placeholders** added in the right spots and captions that make the repo look professional and showcase-ready.
 
 ---
 
-## **Installation & Setup**  
+# **GitLab Pilot 🚀**
 
-### **1. Clone the Repository**  
+*A Python-powered CLI to automate GitLab CI/CD pipeline management*
+
+## **Overview**
+
+**GitLab Pilot** is a developer-friendly **Python CLI tool** that streamlines GitLab **CI/CD pipeline operations**.
+Instead of manually navigating the GitLab UI, this tool provides a **centralized, command-line workflow** for:
+
+* **Triggering pipelines**
+* **Managing pipeline variables**
+* **Downloading artifacts**
+* **Navigating jobs/stages directly from `.gitlab-ci.yml`**
+
+<p align="center">  
+  <img src="screenshots/1.png" alt="GitLab Pilot Main Menu" width="1000"/>  
+</p>  
+
+> *Screenshot: CLI main menu listing projects available in GitLab.*
+
+---
+
+## **Key Features**
+
+✅ Trigger GitLab pipelines **directly from the CLI** (no UI clicks required).
+✅ Dynamically **input and manage CI/CD variables** at runtime.
+✅ **Browse and select projects/subprojects** interactively.
+✅ Automatically **parse `.gitlab-ci.yml`** to list available jobs and stages.
+✅ **Download artifacts** from completed pipelines straight into your local `downloads/` folder.
+✅ **Monitor pipeline progress** in real-time within the CLI.
+✅ Built to be **extensible** — easily add new GitLab API interactions.
+
+---
+
+## **Installation & Setup**
+
+### **1. Clone the Repository**
+
 ```sh
-git clone https://gitlab.ilts.com/snataraj/gitlab_pilot.git
+git clone git@github.com:sandeshbnataraj/gitlab_pilot.git
 cd gitlab_pilot
 ```
 
-### **2. Install Poetry (If Not Installed)**  
+### **2. Install Poetry (if not installed)**
+
 ```sh
 pip install poetry
 ```
 
-### **3. Install Dependencies with Poetry**  
+### **3. Install Dependencies with Poetry**
+
 ```sh
 poetry install
 ```
 
-### **4. Configure Environment Variables**  
-Create a `.env` file in the project root and add your GitLab credentials:  
-```
-GITLAB_BASE_URL=https://gitlab.ilts.com
+### **4. Configure Environment Variables**
+
+Create a `.env` file in the project root with your GitLab credentials:
+
+```ini
+GITLAB_BASE_URL=https://gitlab.com
 GITLAB_PRIVATE_TOKEN=your_private_token
 ```
-> **🔹 Note:** Generate your **GitLab Private Token** from `Settings > Access Tokens` with `api`, `read_repository`, and `write_repository` scopes.
 
-### **5. Activate the Virtual Environment**  
-Run the following command to enter the Poetry-managed virtual environment:  
+> 🔹 **Note:** Generate a private token under
+> `Settings > Access Tokens` with the scopes: `api`, `read_repository`, `write_repository`.
+
+### **5. Activate the Virtual Environment**
+
 ```sh
 poetry shell
 ```
 
 ---
 
-## **Usage Guide**  
+## **Usage**
 
-### **1. Trigger a Pipeline**  
-Run the following command to **start a pipeline**:  
+Run the application with:
+
 ```sh
-poetry run python main.py trigger --project_id <project_id> --branch <branch_name>
-```
-> **Example:**  
-```sh
-poetry run python main.py trigger --project_id 12345 --branch develop
+poetry run python main.py
 ```
 
-### **2. Fetch Pipeline Logs**  
-Retrieve logs of a specific pipeline:  
-```sh
-poetry run python main.py logs --pipeline_id <pipeline_id>
-```
-> **Example:**  
-```sh
-poetry run python main.py logs --pipeline_id 67890
-```
+### **Workflow Example**
 
-### **3. Download Artifacts**  
-Download build artifacts from a completed pipeline:  
-```sh
-poetry run python main.py artifacts --pipeline_id <pipeline_id> --output_dir ./artifacts
-```
-> **Example:**  
-```sh
-poetry run python main.py artifacts --pipeline_id 67890 --output_dir ./artifacts
-```
+1. **Select a project** → The CLI lists all projects in your GitLab account.
+2. **Choose a subproject** → Navigate into specific repositories.
+3. **Trigger pipelines** → CLI reads `.gitlab-ci.yml` and shows jobs/stages you can trigger.
+4. **Input variables** → Enter runtime variables when prompted.
+5. **Monitor status** → See pipeline progress live in the terminal.
+6. **Download artifacts** → Save build outputs to your local `downloads/` folder.
 
-### **4. View Available Variables**  
-To list available variables in a pipeline:  
-```sh
-poetry run python main.py variables --project_id <project_id>
-```
+<p align="center">  
+  <img src="screenshots/2.png" alt="Triggering a Pipeline with GitLab Pilot" width="650"/>  
+</p> 
 
-### **5. Tag & Version Management**  
-To **create a new Git tag** for versioning:  
-```sh
-poetry run python main.py tag --project_id <project_id> --tag_name v1.0.0
-```
+<p align="center">  
+  <img src="screenshots/3.png" alt="Triggering a Pipeline with GitLab Pilot" width="650"/>  
+</p> 
+
+> *GIF: Selecting a project, triggering a pipeline, entering variables, and downloading artifacts.*
+
+⚡ Note: Pipelines must allow **API triggers**; disabled jobs won’t run via CLI.
 
 ---
 
-## **Running Tests**  
-To run the test suite, use:  
-```sh
-poetry run pytest
-```
+## **Contributing**
+
+We welcome contributions 🙌
+
+1. Fork this repo
+2. Create a branch → `git checkout -b feature-name`
+3. Commit changes → `git commit -m "Add feature XYZ"`
+4. Push → `git push origin feature-name`
+5. Open a Pull Request 🚀
 
 ---
 
-## **Future Enhancements**  
-🚀 **Kubernetes integration** for deployment automation  
-🚀 **Slack notifications** for real-time pipeline updates  
-🚀 **Enhanced logging & error handling** for better debugging  
+## **Maintainer & Contact**
 
----
+👤 **Sandesh Nataraj**
+📧 [sandeshb.nataraj@gmail.com](mailto:sandeshb.nataraj@gmail.com)
 
-## **Contributing**  
-🙌 **Contributions are welcome!** If you'd like to improve GitLab Pilot:  
-1. **Fork the repository**  
-2. **Create a feature branch** (`git checkout -b feature-name`)  
-3. **Commit changes** (`git commit -m "Added new feature"`)  
-4. **Push to GitLab** (`git push origin feature-name`)  
-5. **Open a Merge Request** 🚀  
-
----
-
-## **Maintainer & Contact**  
-👤 **Maintainer:** Sandesh Nataraj  
-📧 Email: [your-email@example.com]  
-🔗 **GitLab Repo:** [GitLab Pilot - Develop](https://gitlab.ilts.com/snataraj/gitlab_pilot/-/tree/develop?ref_type=heads)  
-
----
-
-This `README.md` **accurately reflects your use of Poetry**, includes **clear installation & usage steps**, and is structured for easy readability. 🚀 Let me know if you’d like any refinements!
