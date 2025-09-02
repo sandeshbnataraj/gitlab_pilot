@@ -23,11 +23,17 @@ Instead of manually navigating the GitLab UI, this tool provides a **centralized
 ## **Key Features**
 
 ✅ Trigger GitLab pipelines **directly from the CLI** (no UI clicks required).
+
 ✅ Dynamically **input and manage CI/CD variables** at runtime.
+
 ✅ **Browse and select projects/subprojects** interactively.
+
 ✅ Automatically **parse `.gitlab-ci.yml`** to list available jobs and stages.
+
 ✅ **Download artifacts** from completed pipelines straight into your local `downloads/` folder.
+
 ✅ **Monitor pipeline progress** in real-time within the CLI.
+
 ✅ Built to be **extensible** — easily add new GitLab API interactions.
 
 ---
