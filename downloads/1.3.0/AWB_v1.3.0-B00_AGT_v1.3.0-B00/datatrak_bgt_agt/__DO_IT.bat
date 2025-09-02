@@ -1,0 +1,105 @@
+@echo off
+set DBALogin=sa
+echo The SQLSrv SA username used is %DBALogin%
+echo.
+set "psCommand=powershell -Command "$pword = read-host 'Please enter the SA username, (%DBALogin%) password' -AsSecureString ; ^
+    $BSTR=[System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($pword); ^
+        [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)""
+for /f "usebackq delims=" %%p in (`%psCommand%`) do set DBAPassword=%%p
+
+set MASTER_LOG=datatrak_bgt_agt_db_output_logfile.log
+
+SET SCRIPT_LIST=scriptlist.txt
+
+set Server=172.19.19.155
+set Database=datatrak_bgt_agt
+set OldDBVersion='v1.2.1-B00'
+set NewDBVersion='v1.3.0-B00'
+
+echo Server   : %Server%
+echo Database : %Database%
+echo Control  : %SCRIPT_LIST%
+pause
+
+rem *****************
+rem *** Temp File ***
+rem *****************
+
+SET JOB="sql_tmp_script.sql"
+rem SET TEMP="tempfiles.out"
+SET SQLCMD_OUT="SQLCMD.out"
+
+echo set nocount on > %JOB%
+echo go >> %JOB%
+echo IF OBJECT_ID('dbo.system_dbversion') IS NULL >> %JOB%
+echo CREATE TABLE system_dbversion ( >> %JOB%
+echo dbversion_id varchar(50) NOT NULL, >> %JOB%
+echo date_modified datetime2 NOT NULL DEFAULT (getdate()), >> %JOB%
+echo PRIMARY KEY CLUSTERED (dbversion_id)) >> %JOB%
+echo declare @oldversion varchar(50) >> %JOB%
+echo declare @version varchar(50) >> %JOB%
+echo set @oldversion = %OldDBVersion% >> %JOB%
+echo IF NOT EXISTS (SELECT 'X' FROM system_dbversion) >> %JOB%
+echo BEGIN >> %JOB%
+echo INSERT INTO system_dbversion( dbversion_id ) >> %JOB%
+echo   VALUES ( %NewDBVersion% ) >> %JOB%
+echo END >> %JOB%
+echo set @version = ( select rtrim(ltrim(dbversion_id)) from system_dbversion where dbversion_id like @oldversion + '%%' ) >> %JOB%
+echo if (@version is NULL) >> %JOB%
+echo print 'Deployment aborted due to incompatible DB version!!!' >> %JOB%
+echo else >> %JOB%
+echo print 'Proceed with the deployment as correct DB version is being used...' >> %JOB%
+echo go >> %JOB%
+
+sqlcmd.exe -S %Server% -d %Database% -U %DBALogin% -P %DBAPassword% -i %JOB% -o %SQLCMD_OUT% -f 65001 -w 512 >> %SQLCMD_OUT%.err
+
+type %SQLCMD_OUT% > %MASTER_LOG% 
+
+if exist %SQLCMD_OUT% del /F /Q %SQLCMD_OUT%
+if exist %SQLCMD_OUT%.err del /F /Q %SQLCMD_OUT%.err
+if exist %JOB% del /F /Q %JOB%
+
+set search="Proceed"
+
+findstr /R /N %search% %MASTER_LOG% | find /C ":" > NUL
+set notfound=%errorlevel%
+if %errorlevel% == 1 set notfound=1
+if %notfound% == 1 goto :EOF
+
+FOR /F %%s IN (%SCRIPT_LIST%) DO call :Deploy_SQL %Server% %Database% %DBALogin% %DBAPassword% %%s
+
+start notepad %MASTER_LOG%
+
+goto :EOF
+
+:Deploy_SQL
+set SqlSrvSRV=%1
+set SqlSrvDBN=%2
+set SqlSrvUID=%3
+set SqlSrvPWD=%4
+set SqlSrvSQL=%5
+set SqlSrvOut=%SqlSrvSRV%_%SqlSrvDBN%_%SqlSrvSQL%.Out
+if (%SqlSrvSRV%) == () goto :ERROR_END
+if (%SqlSrvDBN%) == () goto :ERROR_END
+if (%SqlSrvUID%) == () goto :ERROR_END
+if (%SqlSrvPWD%) == () goto :ERROR_END
+if (%SqlSrvSQL%) == () goto :ERROR_END
+echo Server   : %SqlSrvSRV%
+echo Database : %SqlSrvDBN%
+echo Login    : %SqlSrvUID%
+echo Password : ********
+echo Script   : %SqlSrvSQL%
+if (%SqlSrvDBN%) == (NULL) set SqlSrvDBN=
+if (%SqlSrvPWD%) == (NULL) set SqlSrvPWD=
+if (%SqlSrvDBN%) == () sqlcmd.exe -S %SqlSrvSRV% -d %SqlSrvDBN% -U %SqlSrvUID% -P %SqlSrvPWD% -i %SqlSrvSQL% -o %SqlSrvOut% -f 65001 -w 512 >%SqlSrvSQL%.err
+if NOT (%SqlSrvDBN%) == () sqlcmd.exe -S %SqlSrvSRV% -d %SqlSrvDBN% -U %SqlSrvUID% -P %SqlSrvPWD% -i %SqlSrvSQL% -o %SqlSrvOut% -f 65001 -w 512 >%SqlSrvSQL%.err
+REM start notepad %SqlSrvOut%
+type %SqlSrvOut% >>%MASTER_LOG%
+goto :EOF
+
+:ERROR_END
+echo Insufficient parameters specified !!
+
+goto :EOF
+
+pause

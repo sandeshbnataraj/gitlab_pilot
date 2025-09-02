@@ -1,0 +1,15 @@
+﻿Proceed with the deployment as correct DB version is being used...
+Changed database context to 'datatrak_bgt_agt'.
+Table dbo.coresys_panel_details_mem has been created successfully.
+Changed database context to 'datatrak_bgt_agt'.
+Table dbo.coresys_update_panels_lotto535 has been created successfully.
+Changed database context to 'datatrak_bgt_agt'.
+Table dbo.in_proc_coresys_update_panels_lotto535 has been created successfully.
+Changed database context to 'datatrak_bgt_agt'.
+Table dbo.in_proc_panels_lotto535 has been created successfully.
+Table dbo.panel_details_mem has been created successfully.
+Changed database context to 'datatrak_bgt_agt'.
+Table dbo.panels_lotto535 has been created successfully.
+Table dbo.staging_move_tickets has been created successfully.
+Table dbo.tickets_details_mem has been created successfully.
+Table dbo.transaction_details_mem has been created successfully.

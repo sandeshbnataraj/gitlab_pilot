@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "gitlab-pilot"
+version = "0.1.0"
+description = "A Gitlab CLI tool for managing pipelines"
+authors = ["Sandesh Nataraj <snataraj@ilts.com>"]
+readme = "README.md"
+packages = [
+    { include = "gitlab_pilot", from = "src" }  # Includes the core package
+]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+python-gitlab = "^3.0.0"
+pyyaml = "^6.0"
+python-dotenv = "^1.0.0"
+rich = "^13.0.0"
+docker = "^6.0.0"
+textual = "^2.1.2"
+
+[tool.poetry.scripts]
+gitlab-pilot = "main:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

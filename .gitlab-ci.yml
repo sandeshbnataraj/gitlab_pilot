@@ -1,0 +1,23 @@
+build image:
+    stage: build
+    image: docker:stable
+    services:
+        - name: docker:dind
+          alias: thedockerhost
+    variables:
+        # Tell docker CLI how to talk to Docker daemon; see
+        DOCKER_HOST: tcp://thedockerhost:2375/
+        # Use the overlayfs driver for improved performance:
+        DOCKER_DRIVER: overlay2
+        DOCKER_TLS_CERTDIR: ""
+        #CONTAINER_REG: "gitlab.ilts.com:5050/snataraj/gitlab_pilot"
+        CONTAINER_REG: "docker.io/sandeshbn/gitlab_pilot"
+    script:
+        # Login to Docker Hub using your Docker Hub username and personal access token (PAT)
+        - docker login -u "sandeshbn" -p "dckr_pat_JVa9_frIMxTP97VZa8dZZVEzSTM"
+        # Build the Docker image
+        - docker build -t "$CONTAINER_REG:1.0.0" .
+        # Push the Docker image to Docker Hub
+        - docker push "$CONTAINER_REG:1.0.0"
+        # Logout from Docker Hub
+        - docker logout

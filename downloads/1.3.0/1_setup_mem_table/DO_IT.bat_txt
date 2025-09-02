@@ -1,0 +1,57 @@
+@echo off
+setlocal
+
+REM SQL login
+set DBALogin=sa
+echo The SQL Server login used is: %DBALogin%
+echo.
+
+REM Prompt for password securely
+set "psCommand=powershell -Command "$pword = read-host 'Please enter the password for %DBALogin%' -AsSecureString ; ^
+    $BSTR=[System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($pword); ^
+    [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)"" 
+for /f "usebackq delims=" %%p in (`%psCommand%`) do set DBAPassword=%%p
+
+REM Setup configuration
+set Server=172.19.19.149
+set Database=datatrak_bgt_agt
+set SQLSCRIPT=setup_memory_optimized.sql
+
+set MASTER_LOG=memory_optimized_setup_output.log
+set SQLCMD_OUT=sqlcmd_memopt_output.out
+set JOB=memory_tmp_script.sql
+
+echo Server   : %Server%
+echo Database : %Database%
+echo Script   : %SQLSCRIPT%
+pause
+
+REM Copy SQL file content to temp job file
+type %SQLSCRIPT% > %JOB%
+
+REM Run sqlcmd with output and error capture
+sqlcmd.exe -S %Server% -d %Database% -U %DBALogin% -P %DBAPassword% -i %JOB% -o %SQLCMD_OUT% -f 65001 -w 512 >> %SQLCMD_OUT%.err
+
+REM Save output to master log
+type %SQLCMD_OUT% >> %MASTER_LOG%
+
+REM Clean up
+if exist %SQLCMD_OUT% del /F /Q %SQLCMD_OUT%
+if exist %SQLCMD_OUT%.err del /F /Q %SQLCMD_OUT%.err
+if exist %JOB% del /F /Q %JOB%
+
+REM Optional check
+set search="Memory optimized setup completed successfully"
+findstr /R /N %search% %MASTER_LOG% | find /C ":" > NUL
+set notfound=%errorlevel%
+if %errorlevel% == 1 set notfound=1
+
+if %notfound% == 1 (
+    echo Script failed or did not complete successfully. Check the log: %MASTER_LOG%
+    goto :EOF
+)
+
+echo Script completed. Output saved to %MASTER_LOG%
+start notepad %MASTER_LOG%
+
+goto :EOF
