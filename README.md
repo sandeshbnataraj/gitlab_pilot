@@ -1,7 +1,3 @@
-Perfect 👍 — here’s your polished README with **screenshot/GIF placeholders** added in the right spots and captions that make the repo look professional and showcase-ready.
-
----
-
 # **GitLab Pilot 🚀**
 
 *A Python-powered CLI to automate GitLab CI/CD pipeline management*
